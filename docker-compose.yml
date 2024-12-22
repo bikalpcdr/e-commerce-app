@@ -1,0 +1,79 @@
+services:
+  postgres:
+    container_name: ms_pg_sql
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: bikalp
+      POSTGRES_PASSWORD: bikalp
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: ms_pgadmin
+    image: dpage/pgadmin4:6.20
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  mongodb:
+    container_name: ms_mango_db
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo:/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=bikalp
+      - MONGO_INITDB_ROOT_PASSWORD=bikalp
+    networks:
+      - microservices-net
+
+  mongo-express:
+    container_name: ms_mongo_express
+    image: mongo-express:1.0.0
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=bikalp
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=bikalp
+      - ME_CONFIG_MONGODB_SERVER=ms_mango_db
+      - ME_CONFIG_BASICAUTH_USERNAME=bikalp
+      - ME_CONFIG_BASICAUTH_PASSWORD=bikalp
+      - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
+      - ME_CONFIG_MONGODB_AUTH_USERNAME=bikalp
+      - ME_CONFIG_MONGODB_AUTH_PASSWORD=bikalp
+      - ME_CONFIG_SITE_BASEURL=/
+    networks:
+      - microservices-net
+    depends_on:
+      - mongodb
+
+  mail-dev:
+    container_name: ms_mail_dev
+    image: maildev/maildev
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+
+networks:
+  microservices-net:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:
+  mongo:
