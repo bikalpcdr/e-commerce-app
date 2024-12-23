@@ -1,4 +1,4 @@
-package com.bikalp.ecommerce.mapper.CustomerMapper;
+package com.bikalp.ecommerce.mapper;
 
 import com.bikalp.ecommerce.entity.customer.Customer;
 import com.bikalp.ecommerce.request.CustomerRequest;

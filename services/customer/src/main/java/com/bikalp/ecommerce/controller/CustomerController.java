@@ -1,10 +1,9 @@
-package com.bikalp.ecommerce.controller.customer;
+package com.bikalp.ecommerce.controller;
 
 import com.bikalp.ecommerce.request.CustomerRequest;
 import com.bikalp.ecommerce.response.CustomerResponse;
 import com.bikalp.ecommerce.service.CustomerService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,9 +11,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/customer")
-@RequiredArgsConstructor
 public class CustomerController {
     private final CustomerService customerService;
+
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
     @PostMapping
     public ResponseEntity<String> createCustomer(@RequestBody @Valid CustomerRequest customerRequest){

@@ -2,12 +2,11 @@ package com.bikalp.ecommerce.service;
 
 import com.bikalp.ecommerce.entity.customer.Customer;
 import com.bikalp.ecommerce.exception.customException.CustomerNotFoundException;
-import com.bikalp.ecommerce.mapper.CustomerMapper.CustomerMapper;
-import com.bikalp.ecommerce.repository.CustomerRepository.CustomerRepo;
+import com.bikalp.ecommerce.mapper.CustomerMapper;
+import com.bikalp.ecommerce.repository.CustomerRepo;
 import com.bikalp.ecommerce.request.CustomerRequest;
 import com.bikalp.ecommerce.response.CustomerResponse;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +16,15 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 
 @Service
-@RequiredArgsConstructor
 public class CustomerService {
 
     private final CustomerRepo customerRepo;
     private final CustomerMapper customerMapper;
+
+    public CustomerService(CustomerRepo customerRepo, CustomerMapper customerMapper) {
+        this.customerRepo = customerRepo;
+        this.customerMapper = customerMapper;
+    }
 
     public String createCustomer(@Valid CustomerRequest customerRequest) {
         var customer = customerRepo.save(customerMapper.toCustomer(customerRequest));
